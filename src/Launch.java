@@ -15,7 +15,7 @@ public class Launch {
 
     public static void main(String[] args) throws IOException {
 
-        String date = "2021-01-12";
+        String date = "2021-01-13";
         Scanner scan = new Scanner(new File("data/sloane_site_locations.dat"));
 
         while (scan.hasNextLine()) {
