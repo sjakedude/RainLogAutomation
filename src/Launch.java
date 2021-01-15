@@ -1,3 +1,4 @@
+import com.mysql.cj.jdbc.MysqlDataSource;
 import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -7,13 +8,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Launch {
 
     private static String apiKey = "a77d00cf8cb244f4801195048211101";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
 
         String date = "2021-01-13";
         Scanner scan = new Scanner(new File("data/sloane_site_locations.dat"));
@@ -36,7 +38,6 @@ public class Launch {
             double precip = day.getDouble("totalprecip_in");
 
             System.out.println(siteName + "|" + precip);
-
         }
     }
 
@@ -60,6 +61,21 @@ public class Launch {
             System.out.println("ERROR: NON 200 STATUS CODE");
             System.exit(1);
             return null;
+        }
+    }
+
+    public static void populateDatabase() throws SQLException {
+
+        // Connecting to the mysql database
+        Connection  conn = DriverManager.getConnection(
+                "jdbc:mysql://10.0.0.66:3306/rainlog", "javauser", "pathlightpro1234"
+        );
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SHOW TABLES");
+        while (rs.next()) {
+            System.out.println(rs.getString(1));
+
         }
     }
 }
