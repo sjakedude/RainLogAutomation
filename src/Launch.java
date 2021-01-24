@@ -17,7 +17,7 @@ public class Launch {
 
     public static void main(String[] args) throws IOException, SQLException {
 
-        String date = "2021-01-13";
+        String date = "2021-01-22";
         Scanner scan = new Scanner(new File("data/sloane_site_locations.dat"));
 
         while (scan.hasNextLine()) {
@@ -30,15 +30,35 @@ public class Launch {
 
             String weatherData = getWeatherData(siteLocation, date);
 
-            JSONObject obj = new JSONObject(weatherData);
-            JSONObject forecast = obj.getJSONObject("forecast");
-            JSONArray level = forecast.getJSONArray("forecastday");
-            JSONObject a = level.getJSONObject(0);
-            JSONObject day = a.getJSONObject("day");
-            double precip = day.getDouble("totalprecip_in");
-
-            System.out.println(siteName + "|" + precip);
+            //printTotalPrecipitation(weatherData, siteName);
+            printHourByHour(weatherData);
+            System.exit(0);
         }
+    }
+
+    private static void printHourByHour(String weatherData) {
+        JSONObject obj = new JSONObject(weatherData);
+        JSONObject forecast = obj.getJSONObject("forecast");
+        JSONArray level = forecast.getJSONArray("forecastday");
+        JSONObject a = level.getJSONObject(0);
+        JSONArray hours = a.getJSONArray("hour");
+        for (int i = 0; i < hours.length(); i++) {
+            double aa = hours.getJSONObject(i).getDouble("precip_in");
+            System.out.println(i + "|" + aa);
+        }
+
+
+    }
+
+    private static void printTotalPrecipitation(String weatherData, String siteName) {
+        JSONObject obj = new JSONObject(weatherData);
+        JSONObject forecast = obj.getJSONObject("forecast");
+        JSONArray level = forecast.getJSONArray("forecastday");
+        JSONObject a = level.getJSONObject(0);
+        JSONObject day = a.getJSONObject("day");
+        double precip = day.getDouble("totalprecip_in");
+
+        System.out.println(siteName + "|" + precip);
     }
 
     public static String getWeatherData(String siteLocation, String date) throws IOException {
